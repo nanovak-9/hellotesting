@@ -33,3 +33,6 @@ steps:
 # Set environment variables for testing (if needed)
 # substitutions:
 #   _ENV_VAR: 'development' # This can be overridden in trigger settings for each environment
+
+options:
+  logging: CLOUD_LOGGING_ONLY
