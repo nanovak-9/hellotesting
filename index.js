@@ -1,12 +1,15 @@
-const express = require('express');
-const app = express();
+const express = require('express')
+const dotenv = require('dotenv')
+const app = express()
+
+dotenv.config()
 
 app.get('/', (req, res) => {
-  const name = process.env.NAME || 'World';
-  res.send(`Hello ${name}!`);
-});
+  const name = process.env.NAME || 'World'
+  res.send(`Hello ${name}!`)
+})
 
-const port = parseInt(process.env.PORT) || 8080;
+const port = parseInt(process.env.PORT) || 8080
 app.listen(port, () => {
-  console.log(`helloworld: listening on port ${port}`);
-});
+  console.log(`helloworld: listening on port ${port}`)
+})
