@@ -13,7 +13,7 @@ steps:
     args:
       - 'run'
       - 'deploy'
-      - 'my-cloud-run-service'  # Replace with your Cloud Run service name
+      - 'hellotesting'  # Replace with your Cloud Run service name
       - '--image=us-west2-docker.pkg.dev/cloudruntest-411620/cloud-run-source-deploy/hellotesting:latest'  # Replace with your image name and tag
       - '--platform=managed'
       - '--region=us-west2'
