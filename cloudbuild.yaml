@@ -9,12 +9,12 @@ steps:
   # Since your app is simple, you might not need this step.
 
   # Step 3: Deploy to Cloud Run
-   - name: 'gcr.io/cloud-builders/gcloud'
+  - name: 'gcr.io/cloud-builders/gcloud'
     args:
       - 'run'
       - 'deploy'
-      - 'hellotesting'  # Replace with your Cloud Run service name
-      - '--image=us-west2-docker.pkg.dev/cloudruntest-411620/cloud-run-source-deploy/hellotesting:latest'  # Replace with your image name and tag
+      - 'hellotesting' # Replace with your Cloud Run service name
+      - '--image=us-west2-docker.pkg.dev/cloudruntest-411620/cloud-run-source-deploy/hellotesting:latest' # Replace with your image name and tag
       - '--platform=managed'
       - '--region=us-west2'
       - '--allow-unauthenticated'
@@ -22,4 +22,3 @@ steps:
 options:
   logging: CLOUD_LOGGING_ONLY # Specify the logging option
   default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET # Use regional logs bucket
-
