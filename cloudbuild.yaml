@@ -16,5 +16,5 @@ steps:
       - 'hellotesting'
       - '--image=gcr.io/$PROJECT_ID/hellotesting-image'
       - '--platform=managed'
-      - '--region=us-central1'
+      - '--region=us-west2'
       - '--allow-unauthenticated' # For testing purposes only
