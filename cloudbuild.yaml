@@ -10,14 +10,15 @@ steps:
 
   # Step 3: Deploy to Cloud Run
   - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
     args:
-      - 'run'
-      - 'deploy'
-      - 'hellotesting' # Replace with your Cloud Run service name
-      - '--image=us-west2-docker.pkg.dev/cloudruntest-411620/cloud-run-source-deploy/hellotesting:latest' # Replace with your image name and tag
-      - '--platform=managed'
-      - '--region=us-west2'
-      - '--allow-unauthenticated'
+      - '-c'
+      - |
+        gcloud run deploy hellotesting \
+          --image=us-west2-docker.pkg.dev/cloudruntest-411620/cloud-run-source-deploy/hellotesting:latest \
+          --platform=managed \
+          --region=us-west2 \
+          --allow-unauthenticated
 
 options:
   logging: CLOUD_LOGGING_ONLY # Specify the logging option
