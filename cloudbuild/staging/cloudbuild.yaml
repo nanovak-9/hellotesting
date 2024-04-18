@@ -33,3 +33,7 @@ steps:
 # Set environment variables for testing (if needed)
 substitutions:
   _ENV_VAR: 'staging' # Change this value based on your testing environment
+
+options:
+  logging: CLOUD_LOGGING_ONLY # Specify the logging option
+  default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET # Use regional logs bucket
