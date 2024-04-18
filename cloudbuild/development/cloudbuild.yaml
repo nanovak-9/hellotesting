@@ -1,0 +1,25 @@
+steps:
+  # Step 1: Install Node.js dependencies
+  - name: 'node:14' # Use Node.js 14 image
+    entrypoint: 'npm'
+    args: ['install']
+
+  # Step 2: Build the application (if needed)
+  # This step may include compiling TypeScript, bundling assets, etc.
+  # Since your app is simple, you might not need this step.
+
+  # Step 3: Deploy to Cloud Run
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        gcloud run deploy hellotesting \
+          --image=us-west2-docker.pkg.dev/cloudruntest-411620/cloud-run-source-deploy/hellotesting:latest \
+          --platform=managed \
+          --region=us-west2 \
+          --allow-unauthenticated
+
+options:
+  logging: CLOUD_LOGGING_ONLY # Specify the logging option
+  default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET # Use regional logs bucket
