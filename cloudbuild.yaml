@@ -1,0 +1,35 @@
+steps:
+  # Step 1: Install Node.js dependencies
+  - name: 'node:14' # Use Node.js 14 image
+    entrypoint: 'npm'
+    args: ['install']
+
+  # # Step 2: Retrieve secret and run the application
+  # - name: 'gcr.io/cloud-builders/gcloud'
+  #   entrypoint: 'bash'
+  #   args:
+  #     - '-c'
+  #     - |
+  #       echo "Retrieving secret..."
+  #       export DB_CONNECTION_STRING=$(gcloud secrets versions access latest --secret="db-connection-string")
+  #       echo "Starting application..."
+  #       npm start  # Assuming your start script uses the environment variables appropriately
+
+  # Step 3: Build the application (if needed)
+  # This step may include compiling TypeScript, bundling assets, etc.
+  # Since your app is simple, you might not need this step.
+
+  # Step 4: Deploy to Cloud Run
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'hellotesting'
+      - '--image=gcr.io/cloudruntest-411620/hellotesting'
+      - '--platform=managed'
+      - '--region=us-west2'
+      - '--allow-unauthenticated' # For testing purposes only
+
+# Set environment variables for testing (if needed)
+substitutions:
+  _ENV_VAR: 'staging' # Change this value based on your testing environment
