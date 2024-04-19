@@ -36,3 +36,13 @@ images:
 options:
   substitutionOption: ALLOW_LOOSE
   logging: CLOUD_LOGGING_ONLY
+substitutions:
+  _TRIGGER_ID: 4df99f2f-95e4-4c76-93b0-c71a9ddc85cc
+  _DEPLOY_REGION: us-west2
+  _AR_HOSTNAME: us-west2-docker.pkg.dev
+  _PLATFORM: managed
+  _SERVICE_NAME: hellotesting-stage
+tags:
+  - gcp-cloud-build-deploy-cloud-run
+  - gcp-cloud-build-deploy-cloud-run-managed
+  - hellotesting-stage
