@@ -6,7 +6,7 @@ dotenv.config()
 
 app.get('/', (req, res) => {
   const name = process.env.NAME || 'World'
-  res.send(`YES! ${name} branch~`)
+  res.send(`Hello, ${name} branch~`)
 })
 
 const port = parseInt(process.env.PORT) || 8080
