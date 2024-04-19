@@ -1,35 +1,48 @@
 steps:
-  # Step 1: Install Node.js dependencies
-  - name: 'node:14' # Use Node.js 14 image
-    entrypoint: 'npm'
-    args: ['install']
-
-  # # Step 2: Retrieve secret and run the application
-  # - name: 'gcr.io/cloud-builders/gcloud'
-  #   entrypoint: 'bash'
-  #   args:
-  #     - '-c'
-  #     - |
-  #       echo "Retrieving secret..."
-  #       export DB_CONNECTION_STRING=$(gcloud secrets versions access latest --secret="db-connection-string")
-  #       echo "Starting application..."
-  #       npm start  # Assuming your start script uses the environment variables appropriately
-
-  # Step 3: Build the application (if needed)
-  # This step may include compiling TypeScript, bundling assets, etc.
-
-  # Step 4: Deploy to Cloud Run
-  - name: 'gcr.io/cloud-builders/gcloud'
-    entrypoint: 'bash'
+  - name: gcr.io/k8s-skaffold/pack
     args:
-      - '-c'
-      - |
-        gcloud run deploy hellotesting \
-          --image=us-west2-docker.pkg.dev/cloudruntest-411620/cloud-run-source-deploy/hellotesting:latest \
-          --platform=managed \
-          --region=us-west2 \
-          --allow-unauthenticated
-
+      - build
+      - >-
+        $_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+      - '--builder=gcr.io/buildpacks/builder:v1'
+      - '--network=cloudbuild'
+      - '--path=.'
+    id: Buildpack
+    entrypoint: pack
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - >-
+        $_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+    id: Push
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    args:
+      - run
+      - services
+      - update
+      - $_SERVICE_NAME
+      - '--platform=managed'
+      - >-
+        --image=$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+      - >-
+        --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID
+      - '--region=$_DEPLOY_REGION'
+      - '--quiet'
+    id: Deploy
+    entrypoint: gcloud
+images:
+  - >-
+    $_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
 options:
-  logging: CLOUD_LOGGING_ONLY # Specify the logging option
-  default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET # Use regional logs bucket
+  substitutionOption: ALLOW_LOOSE
+  logging: CLOUD_LOGGING_ONLY
+substitutions:
+  _TRIGGER_ID: 5cf3cc99-84d3-4cbc-9e17-718510
+  _DEPLOY_REGION: us-west2
+  _AR_HOSTNAME: us-west2-docker.pkg.dev
+  _PLATFORM: managed
+  _SERVICE_NAME: hellotesting-prod
+tags:
+  - gcp-cloud-build-deploy-cloud-run
+  - gcp-cloud-build-deploy-cloud-run-managed
+  - hellotesting-prod
